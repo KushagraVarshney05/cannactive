@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>נדרש אימות גיל</title>
+    <!-- Load Tailwind CSS for modern, responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply a subtle dark background texture */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            background-image: radial-gradient(#333 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* 1. Icon Pulse Animation Keyframes */
+        @keyframes pulse-subtle {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.95;
+            }
+        }
+
+        .icon-pulse {
+            animation: pulse-subtle 2.5s ease-in-out infinite;
+        }
+
+        /* 2. Custom Primary Button Style (Mimicking the Cannactive Button) */
+        .cannactive-btn-yes {
+            border-radius: 9999px;
+            /* Pill shape */
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            /* text-lg */
+            font-weight: 800;
+            /* extra-bold */
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+
+            /* Gradient: Lighter green to standard green */
+            background: linear-gradient(180deg, #7ad37a 0%, #4caf50 100%);
+            color: white;
+
+            /* White Border/Outline - 6px */
+            border: 6px solid white;
+
+            /* Shadow/Bevel for depth */
+            box-shadow:
+                0px 2px 4px rgba(0, 0, 0, 0.4),
+                /* Soft outer shadow */
+                0px 1px 1px rgba(255, 255, 255, 0.5) inset;
+            /* Top highlight for bevel */
+        }
+
+        .cannactive-btn-yes:hover {
+            /* Slightly brighter gradient on hover */
+            background: linear-gradient(180deg, #88e188 0%, #5cb85c 100%);
+            transform: scale(1.03);
+        }
+
+        /* 3. Custom Secondary Button Style (Outline Green/White) */
+        .cannactive-btn-no {
+            border-radius: 9999px;
+            /* Pill shape */
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            /* text-lg */
+            font-weight: 800;
+            /* extra-bold */
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+
+            /* Outline Style: White background, Green text, Green border - 6px */
+            background-color: white;
+            color: #4caf50;
+            /* Green text color */
+            border: 6px solid #4caf50;
+            /* Green border color */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cannactive-btn-no:hover {
+            background-color: #f0f0f0;
+            /* Slightly off-white hover background */
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4" dir="rtl">
+
+    <!-- Age Verification Modal Container -->
+    <div id="verification-modal" class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 sm:p-10 text-center 
+                transform transition-all duration-500 ease-out 
+                opacity-0 -translate-y-5 scale-[0.98] 
+                hover:shadow-green-500/30">
+
+        <!-- Icon Pulse Animation Applied -->
+        <svg class="mx-auto h-16 w-16 text-green-600 icon-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+
+        <h1 class="text-3xl font-extrabold text-gray-900 mt-4 mb-2">
+            אשר את גילך
+        </h1>
+        <p class="text-gray-600 mb-8 text-lg">
+            עליך להיות בן 21 ומעלה כדי להיכנס לאתר <span class="font-semibold text-green-600">Cannactive</span>.
+        </p>
+
+        <p class="text-sm text-gray-500 mb-8">
+            אנא אמת את תאריך הלידה שלך כדי להמשיך.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+
+            <!-- "Yes" Button: Custom gradient, white border, pill shape -->
+            <button onclick="checkAge(true)" class="cannactive-btn-yes flex-1">
+                כן, אני בן 21+
+            </button>
+
+            <!-- "No" Button: Outline style (Green border, White background, Green text) -->
+            <button onclick="checkAge(false)" class="cannactive-btn-no flex-1">
+                לא, אני לא
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        /**
+         * Handles the age verification decision and redirects the user accordingly.
+         * @param {boolean} is21OrOlder - True if the user claims to be 21+, false otherwise.
+         */
+        function checkAge(is21OrOlder) {
+            // CONFIRMED LINKS:
+            const redirectUrl = is21OrOlder
+                ? 'https://cannactive.co.il/'  // Redirect for YES
+                : 'https://www.google.com/';   // Redirect for NO
+
+            // Simple visual feedback before redirection: fade and shrink
+            const modal = document.getElementById('verification-modal');
+            modal.classList.add('opacity-0', 'scale-[0.95]'); // Added scale down animation on exit
+            modal.classList.remove('scale-100');
+
+            // Wait for the transition to finish before redirecting
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 500); // Increased timeout to match the 500ms transition
+        }
+
+        // Add event listener for keyboard accessibility (Enter/Space on buttons)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                if (document.activeElement.tagName === 'BUTTON') {
+                    document.activeElement.click();
+                }
+            }
+        });
+
+        // Modal Entrance Animation: Runs when the window loads
+        window.onload = () => {
+            const modal = document.getElementById('verification-modal');
+            // Remove the initial hidden/shifted state to trigger the Tailwind transition
+            modal.classList.remove('opacity-0', '-translate-y-5', 'scale-[0.98]');
+            // Set the final visible state
+            modal.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+        }
+    </script>
+</body>
+
+</html>
